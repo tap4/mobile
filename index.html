@@ -1,0 +1,90 @@
+<html>
+<head>
+	<meta htpp-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<link rel="stylesheet" type="text/css" href="./css/mobile.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+attribute  vec4 vPosition;
+attribute  vec4 vColor;
+varying vec4 fColor;
+
+uniform mat4 projection;
+uniform mat4 modelview;
+
+void main() 
+{
+    fColor = vColor;
+    gl_Position = projection * modelview * vPosition;
+} 
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+   
+varying vec4 fColor;
+
+void
+main()
+{
+    gl_FragColor = fColor;
+}
+</script>
+
+<script type="text/javascript" src="./js/webgl-utils.js"></script>
+<script type="text/javascript" src="./js/initShaders.js"></script>
+<script type="text/javascript" src="./js/MV.js"></script>
+<script type="text/javascript" src="./js/mobile.js"></script>
+</head>
+<body>
+	<div class="col-lg-12" id = "formContainer">
+		<div class="col-lg-12">
+			<h1 id="title"> <u> The Myers-Briggs Mobile Project </u></h1>
+		</div>
+		<div class="col-lg-6">
+			<p id="intro">
+		 	Here at The Meyers-Briggs Mobile Project we believe each and every person is a unique and special creature.  A generic mobile could never satisfy the needs of all!!  <br /><br /> So, using the latest advancements in personality testing, we've developed a system to analyze each of our customers and create a customized mobile that is guaranteed to match his/her every quirk, whim, and fancy!<br /><br /> The results are breathtaking.  And it only takes a moment of your time! <br /><br /> Just complete the short survey below and we'll get to work on your personalized mobile right away...<br /><br /> <i>[Be sure to enable your sound. Our mobiles are multisensory.] </i></p>
+		</div>
+		<div id="ptHolder"class="col-lg-6">
+		<form id="personalityTest">
+			<p id = "romance"> <b>Which of the following best describes your ideal romantic partner?</b>
+				<br />
+				<input type="radio" id="r1" name = "music" value="disney"/> The boy/girl next door with wholesome family values
+				<br />
+				<input type="radio" id="r2" name = "music" value="donna"  /> The wild, uninhibited party animal who is looking for a good time, ALL of the time
+				<br />
+				<input type="radio" id="r3" name = "music" value="guns" /> The "bad" boy/girl whom you can't take home to mother
+				<br />
+			</p>
+			<p = "dream"><b> In your most vivid dreams, which is usually happening?</b>
+				<br />
+				<input type="radio" id="d1" name = "color" value="grandma" /> I am the damsel in distress rescued by the dashing prince. We live happily ever after.
+				<br />
+				<input type="radio" id="d2" name = "color" value="drive" /> I am living in a bright, beautiful kaleidoscope of color. A rainbow of wonders.
+				<br />
+				<input type="radio" id="d3" name = "color" value="skydive" /> The wicked clowns hunt me down and try to steal my soul.  I wake up gasping for air.
+			</p>
+			<p = "party"><b> If you were hosting a party, the invitations would ask Guests to "Bring Your Own __________".</b>
+				<br />
+				<input type="radio" id="p1" name = "speed" value="Balloons"/> Balloons
+				<br />
+				<input type="radio" id="p2" name = "speed" value="Fireworks" /> Fireworks
+				<br />
+				<input type="radio" id="p3" name = "speed" value="Crystal Meth"/> Crystal Meth
+				<br />
+			</p>
+			<input class="btn btn-raised btn-primary" type ="submit" id= "c1" name = "Confirm" value = "Confirm" />
+		</form>
+		</div>
+		</div>
+		<div id="canvasContainer" class="col-lg-12">
+<canvas id="gl-canvas" width="510" height="510">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+   </div>
+<br/>
+
+</body>
+</html>
