@@ -7,12 +7,26 @@ body {
 	width: 70%;
 	margin: auto;
 }
+
 #formContainer {
     font-family: sans-serif;
     font-style: small-caps;
     font-size: 100%;
-    
     text-align: center;
+}
+
+#resetContainer{
+    display: none;
+    margin-bottom: 10px;
+}
+
+#answerButton{
+    margin-top:10px;
+    opacity: 1.0;
+}
+
+#takeSurvey{
+    margin-bottom: 10px;
 }
 
 #ptHolder {
@@ -23,31 +37,14 @@ body {
 
 }
 
-#intro {
-    
-    text-align: left;
-    border: 10px solid #A06D76;
-    background-color: #ACB5A4;
-
-}
-
 #title {
     font-size: 200%;
-    color: black;
+    color: #616454;
     padding:45px;
     border: 10px solid #A06D76;
     background-color: #ACB5A4;
-}
-
-#personalitytest{
-    color:SteelBlue;
-}
-#intro {
-    font-family: sans-serif;
-    font-style: small-caps;
-    font-size: 100%;
-    color: black;
-    text-align: center;
+    opacity: 0.8;
+    font-family: 'Rockwell Extra Bold', 'Rockwell Bold', monospace;
 }
 
 #survey{
@@ -57,6 +54,20 @@ body {
     color: SteelBlue;
     text-align: center;
 }
+
+#formInHere{
+    display:none ;
+    border: 10px solid #A06D76;
+    background-color: #ACB5A4;
+    opacity: 0.8;
+}
+
+#introInHere{
+    border: 10px solid #A06D76;
+    background-color: #ACB5A4;
+    opacity: 0.8;
+}
+
 
 #gl-canvas {
 	padding-left: 0;
