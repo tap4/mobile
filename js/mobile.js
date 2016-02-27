@@ -10,6 +10,8 @@ var gunSong = new Audio ("songs/guns.mp3");
 var readyToDraw = false;
 var a = 1.0/(2.0*Math.sqrt(2.0));
 var b = 0.5;
+var questionsAnswered=0;
+var agreedToSurvey=false;
 
 //Variables Used for the Geometric Shapes
 var NumVertOcto=24;
@@ -23,11 +25,12 @@ var iGR = (1/GR); //inverse of golden ratio
 var pConstant = (1/Math.sqrt(2)); //constant value needed for pyramid coordinates
 
 
-var theme = "none";
-var music = "none";
-var speed = 0;
 var black = vec4( 0.0, 0.0, 0.0, 1.0 );
 var confirmButtonPressed = false;
+
+//Array to store User's final answers to survey.  Initialize with dummy values to avoid
+//possible bugs
+var finals = ["disney", "princess", "slow"];
 
 //Vertices Constants
 var flatThingVertices = [
@@ -160,7 +163,7 @@ var speed = [acceleration[8],
              acceleration[5]
              ];
 
-var movement = false;     // Do we rotate?
+
 var rotationAngle1 =0;  //rotation for 1st bar
 var rotationAngle2 =0;  //rotation for dodeahedron
 var rotationAngle3 =0; //rotation for 2nd bar
@@ -174,6 +177,21 @@ var zDist = -4.0;
 
 var proLoc;
 var mvLoc;
+
+var questions =
+    [["0","a","b","c"],
+     ["In your most vivid dreams, which is usually happening?",
+      "I am the damsel in distress rescued by the dashing prince. We live happily ever after. ", 
+      "I am living in a bright, beautiful kaleidoscope of color. A rainbow of wonders.",
+      "The wicked clowns hunt me down and try to steal my soul. I wake up gasping for air."],
+     ["If you were hosting a party, the invitations would ask Guests to \"Bring Your Own __________\".",
+      "Balloons", "Fireworks", "Crystal Meth"]];
+
+var answersTranslated =
+    [["disney", "summer", "guns"],
+     ["princess", "disco", "goth"],
+     ["slow", "medium", "fast"]];
+
 
 window.onload = function init()
 {
@@ -238,32 +256,78 @@ window.onload = function init()
      }  );  
 
      //Event listener for Submit Button
-     window.addEventListener("submit", function(e){
+     document.getElementById("takeSurvey").addEventListener("click", function(e){
         e.preventDefault(); 
-        if (!confirmButtonPressed)
-        {
-            confirmButtonPressed = true;
-            console.log("in eventLinster");
-            getTestAnswers();
-            destroyForm();
-            bufferEverything();
-            render();
-        }
+        startSurvey();
      });
 
-    render();
+     document.getElementById("resetContainer").addEventListener("click", function(e){
+        e.preventDefault(); 
+        startSurvey();
+     });
+     
+     document.getElementById("answerButton").addEventListener("click", function(e){
+        e.preventDefault();
+        getAnswer(questionsAnswered);
+        questionsAnswered=questionsAnswered+1;
+        if (questionsAnswered<3)
+            {
+                loadQuestion(questionsAnswered);
+            }
+        else{
+            endSurvey();
+        }
+    
+     });
 }
 
-function destroyForm(){
-    var form =document.getElementById('formContainer');
-    form.parentNode.removeChild(form);
-    document.getElementById('canvasContainer').style.display= 'block' ;
+function startSurvey(){
+    $('#formInHere').css('display', 'block');
+    $('#introText').css('display', 'none');
+    $('#takeSurvey').css('display', 'none');
+    $('#introInHere').css('display', 'none');
+}
+
+function endSurvey(){
+    $('#formInHere').css('display', 'none');
+    setColors(finals[1]);
+    $('#canvasContainer').css('display', 'block');
+    $('#resetContainer').css('display', 'block');
+    
+    if (finals[0]==="disney") 
+        {
+        pocahontas.play();
+    }
+    if (finals[0]==="guns") 
+        {
+            gunSong.play();
+        }
+    if (finals[0]==="summer") 
+        {
+            donna.play();
+        }
+    readyToDraw=true;
+    bufferEverything();
+    render();
+
+}
+function loadQuestion(i){
+    resetRadios();
+    document.getElementById("questionText").innerHTML=questions[i][0];
+    document.getElementById("answer0Text").textContent=questions[i][1];
+    document.getElementById("answer1Text").innerHTML=questions[i][2];
+    document.getElementById("answer2Text").innerHTML=questions[i][3];
+    }
+
+function resetRadios(){
+    document.getElementById("answer0").checked=false;
+    document.getElementById("answer1").checked=false;
+    document.getElementById("answer2").checked=false;
 }
 
 //This function includes the ordered build of our objects, and pushes the vertices/colors into our arrays
 function bufferEverything()
 {
-     console.log("in bufferEvertyhing");
     var program = initShaders( gl, "vertex-shader", "fragment-shader" );
     gl.useProgram( program );
     latestVertex=0;
@@ -332,43 +396,16 @@ function bufferEverything()
 }
 
 //This function pulls the survey answers from the HTML, sets our themes accordingly, and begins audio play
-function getTestAnswers()
+function getAnswer(q)
 {
-    var r1 = document.getElementById( "r1" );
-    var r2 = document.getElementById("r2");
-    var r3 = document.getElementById("r3");
-    var d1 = document.getElementById( "r1" );
-    var d2 = document.getElementById("r2");
-    var d3 = document.getElementById("r3");
-    var p1 = document.getElementById( "r1" );
-    var p2 = document.getElementById("r2");
-    var p3 = document.getElementById("r3");
-
-    if (document.getElementById('r1').checked){music = "disney";}
-    if (document.getElementById('r2').checked){music = "summer";}
-    if (document.getElementById('r3').checked){music = "guns";}
-    if (document.getElementById('d1').checked){theme = "princess";}
-    if (document.getElementById('d2').checked){theme = "disco";}
-    if (document.getElementById('d3').checked){theme = "goth";}
-    if (document.getElementById('p1').checked){speed = "slow";}
-    if (document.getElementById('p2').checked){speed = "medium";}
-    if (document.getElementById('p3').checked){speed = "fast";}
-
-    setColors(theme);
-    if (music==="disney") 
-        {
-        pocahontas.play();
-    }
-    if (music==="guns") 
-        {
-            gunSong.play();
-        }
-    if (music==="summer") 
-        {
-            donna.play();
-        }
-         console.log("in getTestAnsers");
-    readyToDraw=true;
+    var answer0 = document.getElementById("answer0");
+    var answer1 = document.getElementById("answer1");
+    var answer2 = document.getElementById("answer2");
+    
+    if (document.getElementById('answer0').checked){finals[q] = answersTranslated[q][0];}
+    if (document.getElementById('answer1').checked){finals[q] = answersTranslated[q][1];}
+    if (document.getElementById('answer2').checked){finals[q] = answersTranslated[q][2];}
+  
 }
 
 
@@ -790,10 +827,9 @@ function scale4( x, y, z )
 function render()
 {
     if (readyToDraw===true){
-        gl.clearColor(0, 0, 0, 0);
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    if (speed==="slow")
+    if (finals[2]==="slow")
     {
     rotationAngle1 = rotationAngle1 + 0.1;
     rotationAngle2 = rotationAngle2 + 0.3;
@@ -801,7 +837,7 @@ function render()
     rotationAngle4 = rotationAngle4 + 0.5;
     }
 
-    if (speed==="medium")
+    if (finals[2]==="medium")
     {
     rotationAngle1 = rotationAngle1 + 0.5;
     rotationAngle2 = rotationAngle2 + 0.6;
@@ -809,7 +845,7 @@ function render()
     rotationAngle4 = rotationAngle4 + 0.7;
     }
 
-    if (speed==="fast")
+    if (finals[2]==="fast")
     {
     rotationAngle1 = rotationAngle1 + 1;
     rotationAngle2 = rotationAngle2 + 5;
